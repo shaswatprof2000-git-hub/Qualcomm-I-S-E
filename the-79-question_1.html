@@ -1,0 +1,1004 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The $79 Question</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0F1730; --bg2:#16213F; --bg3:#1D2A4D; --line:#2C3B63; --line2:#3A4C7A;
+  --ink:#EEF2FB; --muted:#A9B4CF; --dim:#7F8BAA;
+  --qc:#0099AD; --qc-t:#5FD6E4; --qc-soft:rgba(0,153,173,.16);
+  --av:#D64963; --av-t:#FF8FA4; --av-soft:rgba(214,73,99,.16);
+  --gov:#B98924; --gov-t:#F2C85E; --gov-soft:rgba(185,137,36,.16);
+  --good:#34C48A; --warn:#FF9F5A;
+  --display:'Chakra Petch','Trebuchet MS',Arial,sans-serif;
+  --body:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;
+  --mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  background-image:radial-gradient(circle at 20% -10%,rgba(0,153,173,.16),transparent 45%),radial-gradient(circle at 90% 10%,rgba(214,73,99,.10),transparent 40%)}
+img,svg{max-width:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--qc-t);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);line-height:1.05;margin:0;text-wrap:balance}
+p{margin:0}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.9}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;position:relative;z-index:1}
+
+/* HUD */
+.hud{position:fixed;left:0;right:0;top:0;z-index:20;padding:calc(10px + env(safe-area-inset-top,0px)) 0 10px;
+  background:rgba(15,23,48,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.hud .wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.brand i{width:30px;height:30px;border-radius:8px;background:var(--av);display:grid;place-items:center;font-family:var(--mono);font-size:12px;color:#fff;font-style:normal}
+.levels{display:flex;gap:6px;flex-wrap:wrap}
+.lvbtn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg2);color:var(--muted);font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.04em}
+.lvbtn b{font-family:var(--body);font-weight:600;letter-spacing:0;color:var(--ink)}
+.lvbtn .tick{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--line2);display:inline-grid;place-items:center;font-size:10px;color:transparent}
+.lvbtn.done .tick{background:var(--good);border-color:var(--good);color:#0F1730}
+.lvbtn[aria-current="true"]{border-color:var(--qc-t);color:var(--qc-t);box-shadow:0 0 0 3px var(--qc-soft)}
+.xp{margin-left:auto;display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.ring{width:38px;height:38px;position:relative;flex:none}
+.ring svg{width:38px;height:38px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:4}
+.ring .bg{stroke:var(--bg3)} .ring .fg{stroke:var(--qc-t);stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset .6s ease}
+.ring span{position:absolute;inset:0;display:grid;place-items:center;font-size:9.5px;font-weight:600;color:var(--ink)}
+.xp strong{color:var(--ink);font-size:16px;font-variant-numeric:tabular-nums;font-family:var(--display)}
+
+main{padding-top:110px;padding-bottom:70px}
+.level{display:grid;gap:22px;animation:enter .5s ease both}
+@keyframes enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* Mission header */
+.mission{display:grid;grid-template-columns:1.02fr .98fr;gap:28px;align-items:center;padding:14px 0 4px}
+.eyebrow{font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--qc-t);margin-bottom:12px}
+.eyebrow.av{color:var(--av-t)} .eyebrow.gov{color:var(--gov-t)}
+.mission h1{font-size:clamp(32px,4.4vw,56px);font-weight:700;letter-spacing:-.01em;text-transform:uppercase}
+.mission .lead{margin-top:14px;font-size:16.5px;color:var(--muted);max-width:52ch}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:22px;perspective:800px}
+.stat{padding:12px 14px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);transform-style:preserve-3d;transition:transform .15s ease,border-color .15s ease;min-width:0}
+.stat b{display:block;font-family:var(--display);font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.01em;overflow-wrap:anywhere;line-height:1.15}
+.stat span{font-size:12.5px;color:var(--muted);display:block;line-height:1.35;margin-top:3px}
+.stat.av b{color:var(--av-t)} .stat.gov b{color:var(--gov-t)} .stat.qc b{color:var(--qc-t)}
+.scene{position:relative;aspect-ratio:4/3;max-width:100%;border-radius:18px;overflow:hidden;background:radial-gradient(circle at 50% 40%,#1D2A4D,#0F1730 70%);border:1px solid var(--line);touch-action:pan-y}
+.scene canvas{display:block;width:100%;height:100%}
+.scene .fallback{position:absolute;inset:0;display:grid;place-items:center;padding:24px}
+.scene .tag{position:absolute;left:14px;right:14px;bottom:12px;font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;pointer-events:none;text-shadow:0 1px 6px #0F1730}
+.scene .pill{position:absolute;right:14px;top:12px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);background:rgba(15,23,48,.7);border:1px solid var(--line2);padding:6px 10px;border-radius:999px;pointer-events:none}
+
+/* Panels */
+.panel{background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:22px 24px;min-width:0}
+.panel-h{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.panel h2{font-size:21px;font-weight:700;text-transform:uppercase;letter-spacing:.01em}
+.hint{font-family:var(--mono);font-size:12px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
+.two{display:grid;grid-template-columns:1.15fr .85fr;gap:22px}
+.legend{display:flex;gap:8px 18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.who{display:grid;gap:8px;margin-top:14px}
+.who div{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;padding:8px 10px;border-radius:10px;background:var(--bg3);font-size:13.5px;color:var(--muted)}
+.who div b{color:var(--ink);font-weight:600}
+.who i{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:13px;color:#fff;font-style:normal}
+
+/* chart text */
+.chart{width:100%;height:auto;display:block}
+.chart text{font-family:var(--mono);font-size:12px;fill:var(--muted)}
+.chart .big{font-family:var(--display);font-size:20px;font-weight:700;fill:var(--ink)}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .lbl{fill:var(--ink);font-family:var(--body);font-size:12.5px}
+
+/* scrubber */
+.scrub{display:grid;gap:14px}
+input[type=range]{width:100%;accent-color:var(--qc-t);height:44px;margin:0}
+input[type=range].scaled{width:87.9%;margin-left:6.06%}
+.event{display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:18px;align-items:center;background:var(--bg3);border-radius:12px;padding:14px 18px;min-height:96px}
+.event b{font-family:var(--display);font-size:34px;font-weight:700;line-height:1;color:var(--av-t);font-variant-numeric:tabular-nums;overflow-wrap:anywhere;display:block}
+.event small{display:block;font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:6px;letter-spacing:.04em}
+.event p{font-size:15px;color:var(--ink)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dot{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-family:var(--mono);font-size:11.5px;color:var(--dim);border:1px solid var(--line);min-height:32px}
+.dot.hit{color:var(--ink);border-color:var(--av);background:var(--av-soft)}
+
+/* flip cards */
+.deck{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;perspective:1200px}
+.deck.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.flip{position:relative;height:200px;background:none;border:0;padding:0;text-align:left;border-radius:14px;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.7,.2,1);min-width:0}
+.flip.on{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:14px;padding:14px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid var(--line);background:var(--bg3);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.face.back{transform:rotateY(180deg);background:var(--qc-soft);border-color:var(--qc)}
+.face.back.gov{background:var(--gov-soft);border-color:var(--gov)}
+.face.back.av{background:var(--av-soft);border-color:var(--av)}
+.face .ttl{font-family:var(--display);font-size:15.5px;font-weight:700;text-transform:uppercase;letter-spacing:.02em;line-height:1.1;overflow-wrap:anywhere}
+.face .num{font-family:var(--display);font-size:22px;font-weight:700;color:var(--av-t);line-height:1.05;overflow-wrap:anywhere}
+.face .sub{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;line-height:1.3}
+.face .txt{font-size:13px;line-height:1.4;color:var(--ink)}
+.face svg{width:28px;height:28px;flex:none}
+.flip:hover .face.front{border-color:var(--line2);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.flip.on .face.back{box-shadow:0 10px 30px rgba(0,0,0,.25)}
+
+/* level 2: order game */
+.flow{display:grid;gap:14px}
+.nodes{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.node{min-height:84px;border-radius:12px;border:1px dashed var(--line2);background:transparent;padding:10px 12px;text-align:left;display:flex;flex-direction:column;gap:4px;position:relative;transition:transform .25s ease,border-color .25s ease,background .25s ease;min-width:0}
+.node b{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--dim)}
+.node span{font-size:13px;line-height:1.3;color:var(--dim)}
+.node.lit{background:var(--bg);border-style:solid;transform:translateY(-3px)}
+.node.lit span{color:var(--ink)}
+.node.gov.lit{border-color:var(--gov);box-shadow:0 0 0 3px var(--gov-soft)} .node.gov.lit b{color:var(--gov-t)}
+.node.av.lit{border-color:var(--av);box-shadow:0 0 0 3px var(--av-soft)} .node.av.lit b{color:var(--av-t)}
+.node.qc.lit{border-color:var(--qc);box-shadow:0 0 0 3px var(--qc-soft)} .node.qc.lit b{color:var(--qc-t)}
+.rail{height:6px;border-radius:6px;background:var(--bg3);overflow:hidden}
+.rail i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gov) 0 50%,var(--av) 50% 66%,var(--qc) 66%);transition:width .5s ease}
+.chips{display:flex;gap:8px;flex-wrap:wrap;min-height:48px}
+.chip{min-height:44px;padding:8px 14px;border-radius:999px;border:1px solid var(--line2);background:var(--bg3);font-size:14px;font-weight:500;display:inline-flex;align-items:center;gap:8px;transition:transform .15s ease,opacity .3s ease}
+.chip i{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);font-style:normal}
+.chip:hover{border-color:var(--qc-t)}
+.chip.shake{animation:shake .4s ease;border-color:var(--warn)}
+.chip.gone{opacity:0;transform:scale(.6);pointer-events:none}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:10px 18px;border-radius:999px;border:1px solid var(--line2);background:var(--bg3);color:var(--ink);font-weight:600;font-size:14.5px}
+.btn.primary{background:var(--qc);border-color:var(--qc);color:#fff}
+.btn.av{background:var(--av);border-color:var(--av);color:#fff}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.45;cursor:default}
+
+/* bars */
+.bars{display:grid;gap:12px}
+.brow{display:grid;grid-template-columns:150px 1fr 52px;gap:12px;align-items:center;font-size:13.5px}
+.brow .lab{color:var(--muted);line-height:1.25} .brow .lab b{display:block;color:var(--ink);font-weight:600}
+.track{height:22px;background:var(--bg3);border-radius:6px;overflow:hidden}
+.track i{display:block;height:100%;width:0;border-radius:0 4px 4px 0;transition:width 1.1s cubic-bezier(.2,.7,.2,1)}
+.brow .val{font-family:var(--mono);font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+
+/* valuation */
+.readout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.ro{background:var(--bg3);border-radius:12px;padding:12px 14px;min-width:0}
+.ro b{display:block;font-family:var(--display);font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1;overflow-wrap:anywhere}
+.ro span{font-size:12.5px;color:var(--muted);display:block;line-height:1.35;margin-top:2px}
+.sop{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1.2fr;gap:8px;align-items:stretch}
+.sop .box{border-radius:12px;padding:12px 6px;background:var(--bg3);border:1px solid var(--line);text-align:center;min-width:0}
+.sop .box b{display:block;font-family:var(--display);font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sop .box span{font-size:12px;color:var(--muted);display:block;line-height:1.3}
+.sop .op{align-self:center;font-family:var(--display);font-size:26px;color:var(--dim)}
+.sop .box.sum{background:var(--qc-soft);border-color:var(--qc)} .sop .box.sum b{color:var(--qc-t)}
+.vote{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vote .btn{justify-content:center;min-height:56px;font-family:var(--display);font-size:18px;text-transform:uppercase;letter-spacing:.04em}
+.verdict{display:grid;gap:14px}
+.vbanner{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;padding:16px 18px;border-radius:12px;background:var(--av-soft);border:1px solid var(--av)}
+.vbanner b{font-family:var(--display);font-size:24px;text-transform:uppercase;color:var(--av-t);line-height:1.1}
+.vbanner.ok{background:rgba(52,196,138,.14);border-color:var(--good)} .vbanner.ok b{color:var(--good)}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;perspective:800px}
+.tile{background:var(--bg3);border-radius:12px;padding:12px 14px;border:1px solid var(--line);min-width:0;transform-style:preserve-3d;transition:transform .15s ease}
+.tile b{display:block;font-family:var(--display);font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;line-height:1.1}
+.tile span{font-size:12px;color:var(--muted);line-height:1.3;display:block;margin-top:3px}
+.tile.av{border-top:3px solid var(--av)} .tile.qc{border-top:3px solid var(--qc)}
+.counter{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.counter .tile b{color:var(--gov-t);font-size:17px;white-space:nowrap}
+.after{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;padding:14px 16px;border-radius:12px;background:var(--qc-soft);border:1px solid var(--qc)}
+.after b{font-family:var(--display);font-size:26px;color:var(--qc-t);white-space:nowrap}
+.after p{font-size:14px;color:var(--ink)}
+
+/* quiz */
+.quiz{border:1px dashed var(--line2);border-radius:18px;padding:20px 24px;background:rgba(22,33,63,.6)}
+.quiz .q{font-family:var(--display);font-size:20px;font-weight:700;margin-bottom:12px}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.opt{min-height:52px;text-align:left;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--bg3);font-size:15px;display:flex;align-items:center;gap:10px;transition:transform .15s ease}
+.opt:hover:not(:disabled){transform:translateY(-2px);border-color:var(--line2)}
+.opt i{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line2);display:inline-grid;place-items:center;font-family:var(--mono);font-size:11px;color:var(--muted);flex:none;font-style:normal}
+.opt.right{border-color:var(--good);background:rgba(52,196,138,.14)} .opt.right i{background:var(--good);border-color:var(--good);color:#0F1730}
+.opt.wrong{border-color:var(--warn);background:rgba(255,159,90,.12)} .opt.wrong i{border-color:var(--warn);color:var(--warn)}
+.opt:disabled{cursor:default}
+.qmsg{margin-top:12px;font-size:14px;color:var(--muted);min-height:22px}
+.qmsg.ok{color:var(--good)} .qmsg.no{color:var(--warn)}
+.nextbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:16px 20px;border-radius:18px;background:var(--bg2);border:1px solid var(--line)}
+.nextbar .badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.nextbar .badge i{width:26px;height:26px;border-radius:50%;background:var(--bg3);display:grid;place-items:center;border:1px solid var(--line2);font-style:normal}
+.nextbar .badge.on{color:var(--gov-t)} .nextbar .badge.on i{background:var(--gov);border-color:var(--gov);color:#fff}
+
+/* level-up overlay */
+.levelup{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:rgba(8,12,28,.78);backdrop-filter:blur(6px);padding:20px}
+.lu-card{position:relative;width:min(520px,100%);border-radius:24px;background:var(--bg2);border:1px solid var(--line2);padding:34px 28px 26px;text-align:center;overflow:hidden;animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:none;opacity:1}}
+.lu-card canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.medal{position:relative;width:96px;height:96px;margin:0 auto 14px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#F2C85E,#B98924 60%,#7d5a12);display:grid;place-items:center;font-family:var(--display);font-size:38px;color:#fff;box-shadow:0 12px 30px rgba(185,137,36,.35),inset 0 0 0 6px rgba(255,255,255,.12);animation:spin 1.2s ease both}
+@keyframes spin{from{transform:rotateY(540deg) scale(.4)}to{transform:none}}
+.lu-card h2{font-size:30px;text-transform:uppercase;position:relative}
+.lu-card .hint{position:relative}
+.lu-card .xpgain{position:relative;font-family:var(--mono);font-size:16px;color:var(--gov-t);margin:8px 0 18px}
+.lu-card .btnrow{position:relative;justify-content:center}
+
+/* finale */
+.finale h1{font-size:clamp(46px,8.5vw,112px);letter-spacing:-.02em;text-transform:uppercase;line-height:.92}
+.finale .stripe{display:flex;gap:6px;margin:16px 0 14px}
+.finale .stripe i{height:8px;border-radius:4px;display:block}
+.score{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.score .tile b{font-size:30px}
+.badges{display:flex;gap:10px;flex-wrap:wrap}
+.bd{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:var(--bg3);font-size:13.5px;color:var(--dim)}
+.bd i{width:26px;height:26px;border-radius:50%;background:var(--bg2);border:1px solid var(--line2);display:grid;place-items:center;font-style:normal}
+.bd.on{color:var(--ink);border-color:var(--gov)} .bd.on i{background:var(--gov);border-color:var(--gov);color:#fff}
+.team{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;perspective:1000px}
+.member{padding:14px 16px;border-radius:14px;background:var(--bg3);border:1px solid var(--line);transform-style:preserve-3d;transition:transform .15s ease,border-color .15s ease;display:flex;align-items:center;gap:12px;min-width:0}
+.member .av{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:14px;color:#fff;flex:none}
+.member b{display:block;font-size:15px;font-weight:600;line-height:1.2}
+.member span{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
+.member:hover{border-color:var(--line2)}
+.source{font-size:13.5px;color:var(--muted);line-height:1.5}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);z-index:30;padding:10px 16px;border-radius:999px;background:var(--ink);color:var(--bg);font-family:var(--mono);font-size:13px;font-weight:600;opacity:0;transition:opacity .25s ease,transform .25s ease;pointer-events:none;white-space:nowrap;max-width:calc(100% - 32px);overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (max-width:900px){
+  .mission,.two{grid-template-columns:1fr}
+  .deck,.deck.four{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .nodes{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .counter{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .team{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sop{grid-template-columns:1fr 1fr} .sop .op{display:none}
+  .xp{margin-left:0;width:100%}
+}
+@media (max-width:560px){
+  .stats,.readout,.score,.opts,.vote{grid-template-columns:1fr 1fr}
+  .team{grid-template-columns:1fr}
+  .event{grid-template-columns:1fr}
+  .brow{grid-template-columns:1fr 3fr 48px}
+  .brow .lab b{font-size:13px}
+  .nodes{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .after{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<canvas id="stars" aria-hidden="true"></canvas>
+
+<header class="hud" role="banner">
+  <div class="wrap">
+    <div class="brand"><i>$79</i>The $79 Question</div>
+    <nav class="levels" aria-label="Levels">
+      <button class="lvbtn" data-go="1" aria-current="true"><span class="tick" aria-hidden="true">✓</span>01 <b>The bid</b></button>
+      <button class="lvbtn" data-go="2"><span class="tick" aria-hidden="true">✓</span>02 <b>The block</b></button>
+      <button class="lvbtn" data-go="3"><span class="tick" aria-hidden="true">✓</span>03 <b>The valuation</b></button>
+      <button class="lvbtn" data-go="4"><span class="tick" aria-hidden="true">✓</span>04 <b>Case closed</b></button>
+    </nav>
+    <div class="xp" aria-live="polite">
+      <div class="ring" aria-hidden="true"><svg viewBox="0 0 38 38"><circle class="bg" cx="19" cy="19" r="15.9"/><circle class="fg" id="ringfg" cx="19" cy="19" r="15.9"/></svg><span id="xppct">0%</span></div>
+      <span>XP</span><strong id="xpnum">0</strong>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= LEVEL 1 ================= -->
+<section class="level" id="l1" aria-labelledby="h1a">
+  <div class="mission">
+    <div>
+      <p class="eyebrow av">Level 01 · Question (a) · The bid</p>
+      <h1 id="h1a">Broadcom comes for Qualcomm</h1>
+      <p class="lead">Three prices, one proxy fight, five ways of saying no. Tap the towers, scrub the timeline, flip the defence deck, pass the checkpoint.</p>
+      <div class="stats">
+        <div class="stat av tilt"><b>$130B</b><span>Opening bid, 6 Nov 2017</span></div>
+        <div class="stat av tilt"><b>$82</b><span>“Best and final”, 5 Feb</span></div>
+        <div class="stat av tilt"><b>$79</b><span>Final offer, 20 Feb</span></div>
+        <div class="stat qc tilt"><b>11</b><span>Board seats contested</span></div>
+      </div>
+    </div>
+    <div class="scene" id="scene1" aria-label="3D scene: a Qualcomm chip, the three offer prices as towers, and the wall that blocked them">
+      <div class="fallback">
+        <svg viewBox="0 0 320 240" width="100%" role="img" aria-label="Illustration of a processor chip">
+          <defs><linearGradient id="gchip" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#26365F"/><stop offset="1" stop-color="#131C38"/></linearGradient></defs>
+          <g transform="translate(160 120) rotate(-20) skewX(20)"><rect x="-90" y="-90" width="180" height="180" rx="14" fill="url(#gchip)" stroke="#3A4C7A"/><rect x="-46" y="-46" width="92" height="92" rx="8" fill="#0099AD" opacity=".9"/><rect x="-30" y="-30" width="60" height="60" rx="4" fill="none" stroke="#5FD6E4" stroke-width="1.5" opacity=".8"/></g>
+        </svg>
+      </div>
+      <span class="pill">Drag to orbit</span>
+      <span class="tag">Tap a tower to jump to that offer</span>
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="panel">
+      <div class="panel-h"><h2>Scrub the timeline</h2><span class="hint">Drag the slider</span></div>
+      <div class="scrub">
+        <svg class="chart" viewBox="0 0 600 240" role="img" aria-label="Broadcom's offer per share: 70 dollars from November 2017, raised to 82 in February 2018, cut to 79, then blocked on 12 March 2018">
+          <line class="grid" x1="40" x2="580" y1="190" y2="190"/><line class="grid" x1="40" x2="580" y1="130" y2="130"/><line class="grid" x1="40" x2="580" y1="70" y2="70"/>
+          <text x="6" y="194">$70</text><text x="6" y="134">$76</text><text x="6" y="74">$82</text>
+          <path d="M60,190 H300 V70 H390 V100 H540" fill="none" stroke="var(--av)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+          <line x1="548" x2="548" y1="40" y2="205" stroke="var(--gov)" stroke-width="3" stroke-dasharray="5 5"/>
+          <text x="462" y="226" style="fill:var(--gov-t);font-weight:600">Blocked 12 Mar</text>
+          <text x="52" y="226">Nov 2017</text><text x="280" y="226">Feb 2018</text>
+          <circle cx="60" cy="190" r="5" fill="var(--av)"/><circle cx="300" cy="70" r="5" fill="var(--av)"/><circle cx="390" cy="100" r="5" fill="var(--av)"/>
+          <text class="big" x="76" y="176">$70</text><text class="big" x="284" y="56">$82</text><text class="big" x="402" y="124">$79</text>
+          <line id="mkline" x1="60" x2="60" y1="40" y2="205" stroke="var(--ink)" stroke-width="1" stroke-dasharray="3 5" opacity=".7"/>
+          <circle id="mk" cx="60" cy="190" r="11" fill="none" stroke="var(--ink)" stroke-width="3"/>
+        </svg>
+        <label class="sr" for="scrubber">Timeline position</label>
+        <input type="range" id="scrubber" min="0" max="100" value="0" step="1">
+        <div class="dots" id="evdots"></div>
+        <div class="event" id="evcard"><div><b id="evbig">$70</b><small id="evdate">6 NOV 2017</small></div><p id="evtext">Broadcom offers $70 a share in cash and stock — about $130 billion — whether or not Qualcomm closes NXP.</p></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><h2>How a hostile bid works</h2><span class="hint">Schematic</span></div>
+      <svg class="chart" viewBox="0 0 560 300" role="img" aria-label="Schematic: Broadcom bids, Qualcomm's board rejects, the fight goes to shareholders in a proxy vote, and the US government reviews it">
+        <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#7F8BAA"/></marker></defs>
+        <g><rect x="16" y="24" width="180" height="66" rx="12" fill="var(--av-soft)" stroke="var(--av)"/><text class="lbl" x="30" y="52" style="font-weight:600">Broadcom</text><text x="30" y="74">bids $70 → $82 → $79</text></g>
+        <g><rect x="364" y="24" width="180" height="66" rx="12" fill="var(--qc-soft)" stroke="var(--qc)"/><text class="lbl" x="378" y="52" style="font-weight:600">Qualcomm board</text><text x="378" y="74">rejects, unanimously</text></g>
+        <g><rect x="190" y="150" width="180" height="66" rx="12" fill="var(--bg3)" stroke="var(--line2)"/><text class="lbl" x="204" y="178" style="font-weight:600">Shareholders</text><text x="204" y="200">proxy vote, 11 seats</text></g>
+        <g><rect x="190" y="236" width="180" height="56" rx="12" fill="var(--gov-soft)" stroke="var(--gov)"/><text class="lbl" x="204" y="260" style="font-weight:600">US government</text><text x="204" y="280">CFIUS review · stops the vote</text></g>
+        <path d="M196,57 H364" stroke="#7F8BAA" stroke-width="2" marker-end="url(#arr)" fill="none"/>
+        <path d="M106,90 C106,135 170,130 210,150" stroke="#7F8BAA" stroke-width="2" marker-end="url(#arr)" fill="none"/>
+        <path d="M454,90 C454,135 390,130 350,150" stroke="#7F8BAA" stroke-width="2" marker-end="url(#arr)" fill="none"/>
+        <path d="M280,216 V236" stroke="#7F8BAA" stroke-width="2" marker-end="url(#arr)" fill="none"/>
+        <text x="24" y="128">nominates 11 directors</text><text x="536" y="128" text-anchor="end">asks for a “no” vote</text>
+        <text x="280" y="16" text-anchor="middle">unsolicited offer</text>
+      </svg>
+      <p class="legend" style="margin-top:8px"><span><i style="background:var(--av)"></i>Broadcom</span><span><i style="background:var(--qc)"></i>Qualcomm</span><span><i style="background:var(--gov)"></i>US government</span></p>
+      <div class="who">
+        <div><i style="background:var(--av)">HT</i><span><b>Hock Tan</b> · Broadcom CEO, serial consolidator: “It's hard to be a patent troll forever.”</span></div>
+        <div><i style="background:var(--qc)">SM</i><span><b>Steve Mollenkopf</b> · Qualcomm CEO: $1B of cuts, a higher share price without a buyer</span></div>
+        <div><i style="background:var(--gov)">CF</i><span><b>Treasury / CFIUS</b> · reviews foreign takeovers for national-security risk</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h"><h2>Flip the defence deck</h2><span class="hint" id="fliphint">0 / 5 flipped</span></div>
+    <div class="deck" id="deck1"></div>
+  </div>
+
+  <div class="quiz" id="quiz1"></div>
+  <div class="nextbar"><span class="badge" id="bd1"><i>★</i>Badge: Deal Historian</span><button class="btn primary" data-go="2">Next level — the block →</button></div>
+</section>
+
+<!-- ================= LEVEL 2 ================= -->
+<section class="level" id="l2" hidden aria-labelledby="h2a">
+  <div class="mission">
+    <div>
+      <p class="eyebrow gov">Level 02 · Question (a) · The block and Paul Jacobs</p>
+      <h1 id="h2a">Washington moves first</h1>
+      <p class="lead">Eleven days in March 2018. Put the six steps in order and watch the gate come down, then follow a founder's son out of the boardroom.</p>
+      <div class="stats">
+        <div class="stat gov tilt"><b>30 days</b><span>Meeting delayed, 4 Mar</span></div>
+        <div class="stat gov tilt"><b>12 Mar</b><span>Presidential order</span></div>
+        <div class="stat av tilt"><b>14 Mar</b><span>Broadcom withdraws</span></div>
+        <div class="stat qc tilt"><b>1985</b><span>Last year no Jacobs led Qualcomm</span></div>
+      </div>
+    </div>
+    <div class="scene" id="scene2" aria-label="3D scene: six pillars for the six steps of March 2018, a gate that comes down on the presidential order, and Broadcom's cube retreating">
+      <div class="fallback">
+        <svg viewBox="0 0 320 240" width="100%" role="img" aria-label="Illustration of a gate coming down across a road">
+          <rect x="20" y="150" width="280" height="40" rx="6" fill="#1D2A4D" stroke="#3A4C7A"/><rect x="150" y="40" width="20" height="130" fill="#B98924"/><rect x="60" y="120" width="40" height="40" fill="#D64963"/>
+        </svg>
+      </div>
+      <span class="pill">Drag to orbit</span>
+      <span class="tag">Pillars light up as you sequence the block</span>
+    </div>
+  </div>
+
+  <div class="panel flow">
+    <div class="panel-h"><h2>Order the block</h2><span class="hint">Tap the steps in the order they happened</span></div>
+    <div class="chips" id="chips"></div>
+    <div class="rail"><i id="rail"></i></div>
+    <div class="nodes" id="nodes"></div>
+    <div class="event" id="stepcard"><div><b id="stepbig" style="color:var(--gov-t)">?</b><small id="stepsub">NEXT UP</small></div><p id="steptext">Which came first? Tap a chip above. Wrong guesses just wobble.</p></div>
+    <div class="btnrow"><button class="btn ghost" id="playseq">▶ Auto-play instead</button><button class="btn ghost" id="resetseq">Reset</button></div>
+  </div>
+
+  <div class="two">
+    <div class="panel">
+      <div class="panel-h"><h2>Four grounds</h2><span class="hint" id="fliphint2">0 / 4 flipped</span></div>
+      <div class="deck four" id="deck2"></div>
+      <p class="source" style="margin-top:14px;border-left:3px solid var(--gov);padding-left:12px">“Credible evidence” that Broadcom “might take action that threatens to impair the national security” — presidential order, 12 March 2018.</p>
+      <div class="panel-h" style="margin-top:20px"><h2>Buy it or build it</h2><span class="hint">$ billions, 2013–17</span></div>
+      <div class="bars">
+        <div class="brow"><div class="lab"><b>Broadcom</b>acquisitions</div><div class="track"><i data-w="63.5" style="background:var(--av)"></i></div><div class="val">16.9</div></div>
+        <div class="brow"><div class="lab"><b>Broadcom</b>R&amp;D</div><div class="track"><i data-w="30.5" style="background:var(--av);opacity:.55"></i></div><div class="val">8.1</div></div>
+        <div class="brow"><div class="lab"><b>Qualcomm</b>R&amp;D</div><div class="track"><i data-w="100" style="background:var(--qc)"></i></div><div class="val">26.6</div></div>
+      </div>
+      <div class="stats" style="grid-template-columns:1fr 1fr;margin-top:16px">
+        <div class="stat qc tilt"><b>22–25%</b><span>of Qualcomm revenue into R&amp;D</span></div>
+        <div class="stat qc tilt"><b>18+</b><span>OEMs on the X50 5G modem</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-h"><h2>The Jacobs path</h2><span class="hint">Chairman → bidder → out</span></div>
+      <svg class="chart" viewBox="0 0 520 330" role="img" aria-label="Paul Jacobs: CEO from 2005 and chairman from 2009; steps down as chairman in early March 2018; on 15 March says he wants to take Qualcomm private; voted off the board three days later; drops the bid in April 2019">
+        <path d="M40,34 C120,90 -30,180 40,230 C80,258 40,280 40,296" fill="none" stroke="var(--line2)" stroke-width="3" stroke-dasharray="6 6"/>
+        <g><circle cx="40" cy="34" r="12" fill="var(--qc)"/><text class="lbl" x="64" y="30" style="font-weight:600">Son of the founder</text><text x="64" y="48">CEO 2005 · chairman 2009 to March 2018</text></g>
+        <g><circle cx="62" cy="96" r="12" fill="var(--qc)"/><text class="lbl" x="86" y="92" style="font-weight:600">Steps down as chairman</text><text x="86" y="110">days before the block</text></g>
+        <g><circle cx="40" cy="166" r="12" fill="var(--qc)"/><text class="lbl" x="64" y="162" style="font-weight:600">15 Mar: “take it private”</text><text x="64" y="180">tells the board the evening after Broadcom quits</text></g>
+        <g><circle cx="52" cy="232" r="12" fill="var(--av)"/><text class="lbl" x="76" y="228" style="font-weight:600">Voted off, 3 days later</text><text x="76" y="246">no Jacobs at the top for the first time since 1985</text></g>
+        <g><circle cx="40" cy="296" r="12" fill="var(--av)"/><text class="lbl" x="64" y="292" style="font-weight:600">April 2019: bid dropped</text><text x="64" y="310">could not raise the financing</text></g>
+      </svg>
+      <p class="source" style="margin-top:10px"><strong style="color:var(--ink)">Our read:</strong> a sitting director bidding for his own company is conflicted — and an unfunded buyout claim implied the very undervaluation the board had just used against Broadcom.</p>
+    </div>
+  </div>
+
+  <div class="quiz" id="quiz2"></div>
+  <div class="nextbar"><span class="badge" id="bd2"><i>★</i>Badge: Gatekeeper</span><button class="btn primary" data-go="3">Next level — the valuation →</button></div>
+</section>
+
+<!-- ================= LEVEL 3 ================= -->
+<section class="level" id="l3" hidden aria-labelledby="h3a">
+  <div class="mission">
+    <div>
+      <p class="eyebrow">Level 03 · Question (b) · The valuation</p>
+      <h1 id="h3a">Name your price</h1>
+      <p class="lead">No government veto. Broadcom's final offer is $79. Set the price you'd accept — the gold wall moves in 3D and on the chart — then cast your vote.</p>
+      <div class="stats">
+        <div class="stat av tilt"><b>$79</b><span>Offer on the table</span></div>
+        <div class="stat qc tilt"><b>$76</b><span>Our expected value</span></div>
+        <div class="stat qc tilt"><b>~$95</b><span>With a normal 25% premium</span></div>
+        <div class="stat gov tilt"><b>$10.6</b><span>Net cash per share, FY17</span></div>
+      </div>
+    </div>
+    <div class="scene" id="scene3" aria-label="3D chart: four valuation ranges as bars along a dollar axis, the 79 dollar offer as a red wall, your price as a gold wall, and the 76 dollar expected value as a diamond">
+      <div class="fallback">
+        <svg viewBox="0 0 320 240" width="100%" role="img" aria-label="Illustration of range bars along an axis">
+          <rect x="40" y="60" width="40" height="16" rx="4" fill="#0099AD"/><rect x="150" y="100" width="90" height="16" rx="4" fill="#0099AD"/><rect x="170" y="140" width="40" height="16" rx="4" fill="#0099AD"/><rect x="200" y="180" width="100" height="16" rx="4" fill="#0099AD"/><rect x="178" y="40" width="4" height="170" fill="#D64963"/>
+        </svg>
+      </div>
+      <span class="pill">Drag to orbit</span>
+      <span class="tag">Gold = your price · Red = the $79 offer · Diamond = EV $76</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h"><h2>Where does your price land?</h2><span class="hint">Drag to set it</span></div>
+    <svg class="chart" viewBox="0 0 660 320" role="img" aria-label="Value per share by method: trough earnings 35 to 42 dollars, normalised earnings 71 to 87, sum of the parts 78 to 84, recovery with 5G 87 to 106, expected value 76; the offer is 79">
+      <g class="grid"><line x1="40" x2="40" y1="20" y2="270"/><line x1="185" x2="185" y1="20" y2="270"/><line x1="330" x2="330" y1="20" y2="270"/><line x1="475" x2="475" y1="20" y2="270"/><line x1="620" x2="620" y1="20" y2="270"/></g>
+      <text x="40" y="292" text-anchor="middle">$30</text><text x="185" y="292" text-anchor="middle">$50</text><text x="330" y="292" text-anchor="middle">$70</text><text x="475" y="292" text-anchor="middle">$90</text><text x="620" y="292" text-anchor="middle">$110</text>
+      <text class="lbl" x="40" y="36">Trough earnings <tspan style="fill:var(--muted)">· FY17 op. income $3.0B, 15–19x</tspan></text>
+      <rect x="76" y="44" width="51" height="18" rx="4" fill="var(--qc)"/><text x="134" y="58">$35–42</text>
+      <text class="lbl" x="40" y="96">Normalised earnings <tspan style="fill:var(--muted)">· FY14–16 avg $7.4B, 15–19x</tspan></text>
+      <rect x="337" y="104" width="116" height="18" rx="4" fill="var(--qc)"/><text x="460" y="118">$71–87</text>
+      <text class="lbl" x="40" y="156">Sum of the parts <tspan style="fill:var(--muted)">· QCT 18x, QTL 12–14x</tspan></text>
+      <rect x="388" y="164" width="44" height="18" rx="4" fill="var(--qc)"/><text x="439" y="178">$78–84</text>
+      <text class="lbl" x="40" y="216">Recovery + 5G <tspan style="fill:var(--muted)">· back to FY14 $8.8B, 16–20x</tspan></text>
+      <rect x="453" y="224" width="138" height="18" rx="4" fill="var(--qc)"/><text x="598" y="238">$87–106</text>
+      <g transform="translate(373.5 258)"><rect x="-8" y="-8" width="16" height="16" rx="2" fill="var(--ink)" transform="rotate(45)"/><text x="-16" y="5" text-anchor="end" class="lbl" style="font-weight:600">EV $76</text></g>
+      <line x1="395.25" x2="395.25" y1="20" y2="270" stroke="var(--av)" stroke-width="3" stroke-dasharray="6 5"/>
+      <text x="395.25" y="14" text-anchor="middle" style="fill:var(--av-t);font-weight:600">Offer $79</text>
+      <line id="pline" x1="395.25" x2="395.25" y1="20" y2="270" stroke="var(--gov-t)" stroke-width="3"/>
+      <g id="ptag" transform="translate(395.25 0)"><rect x="-40" y="300" width="80" height="20" rx="10" fill="var(--gov)"/><text id="ptxt" x="0" y="314" text-anchor="middle" style="fill:#fff;font-weight:600">You: $79</text></g>
+    </svg>
+    <label class="sr" for="price">Your price per share</label>
+    <input type="range" id="price" class="scaled" min="30" max="110" value="79" step="1">
+    <div class="readout">
+      <div class="ro"><b id="rp">$79</b><span>your price</span></div>
+      <div class="ro"><b id="rd" style="color:var(--ink)">0%</b><span>vs the $79 offer</span></div>
+      <div class="ro"><b id="rz">Fair+</b><span id="rzl">sum of the parts to normal high — still no control premium</span></div>
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="panel">
+      <div class="panel-h"><h2>Cast your vote</h2><span class="hint">As a Qualcomm shareholder</span></div>
+      <div class="vote"><button class="btn" id="vAccept">Accept $79</button><button class="btn av" id="vReject">Reject $79</button></div>
+      <div class="verdict" id="verdict" hidden>
+        <div class="vbanner" id="vbanner"><b id="vword">Reject</b><p id="vtext"></p></div>
+        <div class="deck four" id="deck3"></div>
+        <div class="after"><b>+23%</b><p><strong>What happened next:</strong> Apple later settled its royalty dispute for $4.5–4.7B and the stock rose 23% — the trough was not the floor.</p></div>
+        <p class="hint">The case for accepting — for balance</p>
+        <div class="counter">
+          <div class="tile"><b>$742M</b><span>FY18 operating income; revenue fell every year since 2015</span></div>
+          <div class="tile"><b>3.63 → 2.90%</b><span>effective royalty rate, sliding</span></div>
+          <div class="tile"><b>51%</b><span>of revenue from four customers</span></div>
+          <div class="tile"><b>FTC</b><span>case threatening the licensing model</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-h"><h2>Sum of the parts</h2><span class="hint">Per share, after tax</span></div>
+      <div class="sop">
+        <div class="box"><b>QCT</b><span>chips<br>18x</span></div><div class="op">+</div>
+        <div class="box"><b>QTL</b><span>licensing<br>12–14x</span></div><div class="op">+</div>
+        <div class="box"><b>$15.6B</b><span>net cash<br>≈ $10.6/sh</span></div><div class="op">=</div>
+        <div class="box sum"><b>$78–84</b><span>a share, standalone</span></div>
+      </div>
+      <div class="panel-h" style="margin-top:18px"><h2>What $79 buys</h2><span class="hint">1.47B shares</span></div>
+      <div class="tiles">
+        <div class="tile tilt"><b>$116B</b><span>equity value</span></div>
+        <div class="tile tilt"><b>$100B</b><span>enterprise value after net cash</span></div>
+        <div class="tile tilt"><b>4.5x</b><span>EV / FY17 revenue $22.3B</span></div>
+        <div class="tile av tilt"><b>33x</b><span>EV / FY17 op. income $3.0B — the trough</span></div>
+        <div class="tile qc tilt" style="grid-column:1 / -1"><b>13.6x</b><span>EV / normalised op. income $7.4B — rich on trough profits, ordinary on normal ones</span></div>
+      </div>
+      <p class="source" style="margin-top:14px">Assumes 20% tax and ~1.47B diluted shares (Qualcomm filings; not in the case). QCT pre-tax profit $3.5B (JANA, 2015); QTL ≈ $5.1B from $30B of royalties over five years at ~85% margin.</p>
+    </div>
+  </div>
+
+  <div class="quiz" id="quiz3"></div>
+  <div class="nextbar"><span class="badge" id="bd3"><i>★</i>Badge: Valuer</span><button class="btn primary" data-go="4">Close the case →</button></div>
+</section>
+
+<!-- ================= LEVEL 4 ================= -->
+<section class="level" id="l4" hidden aria-labelledby="h4a">
+  <div class="mission">
+    <div class="finale">
+      <p class="eyebrow">Level 04 · Group 10 · Qualcomm Inc., 2019</p>
+      <h1 id="h4a">Thank you</h1>
+      <div class="stripe" aria-hidden="true"><i style="width:110px;background:var(--av)"></i><i style="width:60px;background:var(--gov)"></i><i style="width:190px;background:var(--qc)"></i></div>
+      <p class="lead" style="color:var(--muted);font-size:17px">Strategic Management · EMP-MMS Batch 2 · IIM Indore</p>
+      <div class="score" style="margin-top:22px">
+        <div class="tile"><b id="fxp">0</b><span>XP earned</span></div>
+        <div class="tile"><b id="fpct">0%</b><span>of the case explored</span></div>
+        <div class="tile"><b id="fq">0/3</b><span>checkpoints passed</span></div>
+      </div>
+    </div>
+    <div class="scene" id="scene4" aria-label="3D scene: a spinning medal for Group 10 with confetti">
+      <div class="fallback">
+        <svg viewBox="0 0 320 240" width="100%" role="img" aria-label="Illustration of a medal"><circle cx="160" cy="130" r="70" fill="#B98924"/><circle cx="160" cy="130" r="52" fill="#F2C85E"/><rect x="130" y="20" width="24" height="70" fill="#D64963"/><rect x="166" y="20" width="24" height="70" fill="#0099AD"/></svg>
+      </div>
+      <span class="pill">Drag to orbit</span>
+      <span class="tag">Case closed</span>
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="panel">
+      <div class="panel-h"><h2>Group 10</h2><span class="hint">Team</span></div>
+      <div class="team" id="team"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-h"><h2>Your badges</h2><span class="hint">This browser only</span></div>
+      <div class="badges" id="fbadges"></div>
+      <div class="btnrow" style="margin-top:16px"><button class="btn ghost" id="replay">Replay from level 01</button></div>
+      <p class="source" style="margin-top:18px">Source: Yoffie &amp; Choi, “Qualcomm Inc., 2019”, HBS 9-718-514 (rev. August 2019). Valuation assumptions are ours and are stated on level 03. Built as an interactive presentation for questions (a) and (b).</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="levelup" id="levelup" hidden role="dialog" aria-modal="true" aria-labelledby="luname">
+  <div class="lu-card">
+    <canvas id="lucfx" aria-hidden="true"></canvas>
+    <div class="medal" aria-hidden="true">★</div>
+    <p class="hint">Checkpoint passed · badge unlocked</p>
+    <h2 id="luname">Deal Historian</h2>
+    <p class="xpgain" id="luxp">+100 XP</p>
+    <div class="btnrow"><button class="btn primary" id="lunext">Next level →</button><button class="btn ghost" id="luclose">Stay here</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  'use strict';
+  var $=function(s,el){return (el||document).querySelector(s)};
+  var $$=function(s,el){return Array.prototype.slice.call((el||document).querySelectorAll(s))};
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var C={qc:'#0099AD',qct:'#5FD6E4',av:'#D64963',avt:'#FF8FA4',gov:'#B98924',govt:'#F2C85E',ink:'#EEF2FB'};
+
+  /* ---------- content ---------- */
+  var EVENTS=[
+    {x:60,y:190,v:0,big:'$70',date:'6 NOV 2017',text:'Broadcom offers $70 a share in cash and stock — about $130 billion — whether or not Qualcomm closes NXP.'},
+    {x:150,y:190,v:19,big:'11',date:'NOV 2017 · PROXY FIGHT',text:'The board rejects it unanimously. Broadcom nominates 11 directors to take the fight to shareholders.'},
+    {x:300,y:70,v:50,big:'$82',date:'5 FEB 2018 · “BEST AND FINAL”',text:'Raised to $82. Rejected three days later.'},
+    {x:390,y:100,v:69,big:'$79',date:'20 FEB 2018 · PRICE CUT',text:'Qualcomm lifts its NXP offer from $110 to $127.50. Broadcom cuts its price to $79.'},
+    {x:480,y:100,v:88,big:'6 / 11',date:'4 MAR 2018 · VOTES',text:'Early proxy counts show Broadcom winning six seats; Jacobs and Mollenkopf at risk of losing theirs.'}
+  ];
+  var MOVES=[
+    {t:'Price',s:'Undervalued',c:'qc',txt:'Rejected unanimously at every price: the offer “significantly undervalues” the company.',icon:'<path d="M3 6h18"/><path d="M7 6l-3 6a3.5 3.5 0 0 0 6 0z"/><path d="M17 6l-3 6a3.5 3.5 0 0 0 6 0z"/><path d="M12 4v16"/><path d="M8 20h8"/>'},
+    {t:'Standalone',s:'$1B of cuts',c:'qc',txt:'Mollenkopf pledged $1B of cost cuts and argued he could lift the share price without Broadcom.',icon:'<path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16l4-6 3 3 5-7"/>'},
+    {t:'Board',s:'11 seats held',c:'qc',txt:'Refused Broadcom’s 11 nominees and took the fight to the shareholder meeting.',icon:'<circle cx="12" cy="7" r="3"/><circle cx="5" cy="17" r="2.6"/><circle cx="19" cy="17" r="2.6"/><path d="M12 10v4"/><path d="M7 15l3-2"/><path d="M17 15l-3-2"/>'},
+    {t:'Get bigger',s:'NXP raised',c:'qc',txt:'NXP offer lifted from $110 to $127.50 a share — a costlier target. Broadcom answered by cutting its price.',icon:'<rect x="3" y="11" width="8" height="10" rx="1.5"/><rect x="13" y="4" width="8" height="17" rx="1.5"/><path d="M6 15h2"/><path d="M16 8h2"/><path d="M16 12h2"/>'},
+    {t:'Washington',s:'Security review',c:'gov',txt:'With the vote slipping, the fight moved to a national-security review — and ended there.',icon:'<path d="M12 3l8 4v5c0 5-3.4 8-8 9-4.6-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/>'}
+  ];
+  var STEPS=[
+    {c:'gov',d:'4 MAR',t:'Treasury delays the meeting',big:'+30 days',sub:'TREASURY',txt:'The shareholder meeting is pushed back 30 days while CFIUS looks at the bid.'},
+    {c:'gov',d:'5 MAR',t:'CFIUS letter on 5G',big:'5G',sub:'CFIUS',txt:'The deal could cut the R&D that keeps the United States ahead in 5G — a security concern, not a competition one.'},
+    {c:'gov',d:'12 MAR',t:'Presidential order',big:'Blocked',sub:'WHITE HOUSE',txt:'President Trump signs an order blocking the takeover outright. The gate comes down.'},
+    {c:'av',d:'14 MAR',t:'Broadcom withdraws',big:'Out',sub:'BROADCOM',txt:'Broadcom formally withdraws its offer two days later.'},
+    {c:'qc',d:'15 MAR',t:'Jacobs: take it private',big:'Private?',sub:'PAUL JACOBS',txt:'That evening Paul Jacobs tells the board he wants to take Qualcomm private.'},
+    {c:'qc',d:'DAYS LATER',t:'Jacobs voted off',big:'1985',sub:'THE BOARD',txt:'Three days later he is voted off: the first time since 1985 no Jacobs helped lead Qualcomm.'}
+  ];
+  var GROUNDS=[
+    {t:'R&D cut',s:'$16.9B vs $8.1B',c:'gov',txt:'Broadcom spent twice as much buying companies as on research in 2013–17. Qualcomm spent $26.6B on R&D.',icon:'<path d="M4 20V9"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/>'},
+    {t:'5G lead',s:'Huawei, Feb 2018',c:'gov',txt:'Qualcomm led 5G NR: first prototype 2016, 18+ OEMs on X50. Huawei launched its own 5G chip in February 2018.',icon:'<circle cx="12" cy="12" r="2.4"/><path d="M6.5 8a7 7 0 0 0 0 8"/><path d="M17.5 8a7 7 0 0 1 0 8"/><path d="M3.5 5a11 11 0 0 0 0 14"/><path d="M20.5 5a11 11 0 0 1 0 14"/>'},
+    {t:'Foreign control',s:'Singapore-based',c:'gov',txt:'A $1.5B US engineering fund and a faster HQ move to the United States did not change the outcome.',icon:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.7 3.8 5.7 3.8 9S14.5 18.3 12 21c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/>'},
+    {t:'Timing',s:'No deal yet',c:'gov',txt:'CFIUS stepped in before any deal was agreed, while a proxy vote was still under way — without precedent.',icon:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'}
+  ];
+  var REASONS=[
+    {t:'+4%',s:'No control premium',c:'av',txt:'$79 is barely above our $76 expected value. A typical 25% premium points to about $95.'},
+    {t:'$1.7B',s:'Priced at the trough',c:'av',txt:'FY17 absorbed Korean and Taiwanese fines while Apple and Huawei withheld royalties.'},
+    {t:'5G',s:'Upside given away',c:'av',txt:'Selling hands over the whole 5G cycle; the stock half of the offer ties us to an R&D-cutting owner.'},
+    {t:'$82 → 79',s:'Completion risk',c:'av',txt:'China had already blocked NXP, and Broadcom had already cut its “final” price once.'}
+  ];
+  var QUIZ={
+    1:{q:'Which move made Qualcomm more expensive to buy?',a:['Raising its own NXP offer to $127.50','Pledging $1B of cost cuts','Refusing the 11 nominees','Asking for a CFIUS review'],ok:0,why:'Lifting the NXP price made the combined target dearer — Broadcom cut its offer in response.'},
+    2:{q:'At what stage did CFIUS intervene?',a:['After shareholders approved the deal','Before any deal had been agreed','After the deal closed','After Broadcom withdrew'],ok:1,why:'CFIUS moved while the proxy vote was still under way — no deal existed yet.'},
+    3:{q:'What is our expected value per Qualcomm share?',a:['$79','$95','$76','$106'],ok:2,why:'20% trough, 50% normal, 30% recovery, with $10.6 of net cash — $76.'}
+  };
+  var TEAM=[['Shaswat Mohanty','2025MMS2155'],['Naina Das','2025MMS2106'],['Anshuman Sarin','2025MMS2031'],['Akshara Narayanan','2025MMS2013'],['Pooja Gupta','2025MMS2122'],['Sarthak Gera','2025MMS2149'],['Harshit Chaturvedi','2025MMS2068'],['Shrisha Mohan','2025MM2160'],['Asmita Patil','2025MMS2042']];
+  var BADGES=[['Deal Historian','Level 01 checkpoint'],['Gatekeeper','Level 02 checkpoint'],['Valuer','Level 03 checkpoint'],['Case Closed','All three checkpoints']];
+
+  /* ---------- state ---------- */
+  var TOTAL=5+3+5+1+6+1+4+1+1+1+4+1;
+  var S={xp:0,done:{},quiz:{}};
+  try{var raw=localStorage.getItem('q79');if(raw){var p=JSON.parse(raw);if(p&&typeof p==='object'){S.xp=p.xp||0;S.done=p.done||{};S.quiz=p.quiz||{};}}}catch(e){}
+  function save(){try{localStorage.setItem('q79',JSON.stringify(S))}catch(e){}}
+  var toastT;
+  function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show')},1800)}
+  function award(key,pts,label){
+    if(S.done[key])return false;
+    S.done[key]=1;S.xp+=pts;save();renderHud();
+    if(label)toast('+'+pts+' XP · '+label);
+    return true;
+  }
+  function doneCount(){return Object.keys(S.done).length}
+  function pct(){return Math.min(100,Math.round(doneCount()/TOTAL*100))}
+  function renderHud(){
+    var p=pct();$('#ringfg').style.strokeDashoffset=(100-p);$('#xpnum').textContent=S.xp;$('#xppct').textContent=p+'%';
+    [1,2,3].forEach(function(n){$('.lvbtn[data-go="'+n+'"]').classList.toggle('done',!!S.quiz[n]);var bd=$('#bd'+n);if(bd)bd.classList.toggle('on',!!S.quiz[n])});
+    $('.lvbtn[data-go="4"]').classList.toggle('done',!!(S.quiz[1]&&S.quiz[2]&&S.quiz[3]));
+  }
+
+  /* ---------- navigation ---------- */
+  var cur=1;
+  function go(n){
+    n=Math.max(1,Math.min(4,n));cur=n;
+    [1,2,3,4].forEach(function(i){$('#l'+i).hidden=(i!==n)});
+    $$('.lvbtn').forEach(function(b){b.setAttribute('aria-current',b.getAttribute('data-go')==String(n)?'true':'false')});
+    window.scrollTo({top:0,behavior:reduce?'auto':'smooth'});
+    if(n===2)animateBars();
+    if(n===4){renderFinale();if(stage4&&stage4.burst)stage4.burst()}
+    try{history.replaceState(null,'','#level'+n)}catch(e){}
+  }
+  $$('[data-go]').forEach(function(b){b.addEventListener('click',function(){go(parseInt(b.getAttribute('data-go'),10))})});
+  document.addEventListener('keydown',function(e){
+    if(e.target&&/INPUT|TEXTAREA|BUTTON/.test(e.target.tagName))return;
+    if(!$('#levelup').hidden)return;
+    if(e.key==='ArrowRight')go(cur+1);else if(e.key==='ArrowLeft')go(cur-1);
+  });
+
+  /* ---------- level-up overlay ---------- */
+  function levelUp(n,ptsGained){
+    var lu=$('#levelup');$('#luname').textContent=BADGES[n-1][0];$('#luxp').textContent='+'+ptsGained+' XP';
+    $('#lunext').textContent=n<4?'Next level →':'See the finale →';
+    $('#lunext').onclick=function(){lu.hidden=true;go(n+1)};
+    lu.hidden=false;$('#lunext').focus();
+    confetti2d($('#lucfx'));
+  }
+  $('#luclose').addEventListener('click',function(){$('#levelup').hidden=true});
+  $('#levelup').addEventListener('click',function(e){if(e.target===this)this.hidden=true});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')$('#levelup').hidden=true});
+  function confetti2d(cv){
+    if(reduce||!cv.getContext)return;
+    var g=cv.getContext('2d');var W=cv.width=cv.clientWidth||520,H=cv.height=cv.clientHeight||360;
+    var cols=[C.av,C.qc,C.gov,C.ink,C.qct,C.govt];var ps=[];
+    for(var i=0;i<140;i++)ps.push({x:W/2,y:H*0.35,vx:(Math.random()-.5)*14,vy:-Math.random()*12-2,r:3+Math.random()*4,c:cols[i%cols.length],a:Math.random()*6.28,s:(Math.random()-.5)*.3});
+    var t0=performance.now();
+    (function f(now){var dt=(now-t0)/1000;g.clearRect(0,0,W,H);ps.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=.35;p.vx*=.99;p.a+=p.s;g.save();g.translate(p.x,p.y);g.rotate(p.a);g.fillStyle=p.c;g.fillRect(-p.r,-p.r/2,p.r*2,p.r);g.restore()});if(dt<2.6&&!$('#levelup').hidden)requestAnimationFrame(f);else g.clearRect(0,0,W,H)})(t0);
+  }
+
+  /* ---------- level 1: scrubber ---------- */
+  var dots=$('#evdots');
+  EVENTS.forEach(function(ev,i){var d=document.createElement('span');d.className='dot';d.id='dot'+i;d.textContent=ev.date.split(' · ')[0];dots.appendChild(d)});
+  function scrub(v,user){
+    var x=60+(540-60)*v/100;
+    var price=x<300?70:(x<390?82:79);
+    var y=190-(price-70)*10;
+    $('#mk').setAttribute('cx',x);$('#mk').setAttribute('cy',y);
+    $('#mkline').setAttribute('x1',x);$('#mkline').setAttribute('x2',x);
+    var idx=0;EVENTS.forEach(function(ev,i){if(x>=ev.x-1)idx=i});
+    for(var i=0;i<EVENTS.length;i++){$('#dot'+i).classList.toggle('hit',x>=EVENTS[i].x-1)}
+    var ev=EVENTS[idx];$('#evbig').textContent=ev.big;$('#evdate').textContent=ev.date;$('#evtext').textContent=ev.text;
+    if(user&&x>=ev.x-1)award('ev'+idx,10,'Reached '+ev.date.split(' · ')[0]);
+    if(stage1&&stage1.setPrice)stage1.setPrice(price);
+  }
+  $('#scrubber').addEventListener('input',function(e){scrub(parseInt(e.target.value,10),true)});
+  function jumpTo(evIdx){var v=EVENTS[evIdx].v;$('#scrubber').value=v;scrub(v,true)}
+
+  /* ---------- flip decks ---------- */
+  function buildDeck(id,items,key,hintId,pts){
+    var host=$('#'+id);host.innerHTML='';
+    items.forEach(function(it,i){
+      var b=document.createElement('button');b.className='flip';b.type='button';b.setAttribute('aria-pressed','false');
+      var top=it.icon?'<svg viewBox="0 0 24 24" fill="none" stroke="var(--'+(it.c||'qc')+'-t)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+it.icon+'</svg>':'<span class="num">'+it.t+'</span>';
+      var mid=it.icon?'<div><div class="ttl">'+it.t+'</div><div class="sub">'+it.s+'</div></div>':'<div class="ttl">'+it.s+'</div>';
+      b.innerHTML='<span class="face front">'+top+mid+'<span class="sub">Tap to flip</span></span>'+
+                  '<span class="face back '+(it.c||'')+'"><span class="ttl">'+(it.icon?it.t:it.s)+'</span><span class="txt">'+it.txt+'</span></span>';
+      b.addEventListener('click',function(){
+        var on=!b.classList.contains('on');b.classList.toggle('on',on);b.setAttribute('aria-pressed',on?'true':'false');
+        if(on){award(key+i,pts,it.icon?it.t:it.s);updHint()}
+      });
+      host.appendChild(b);
+    });
+    function updHint(){if(!hintId)return;var n=0;items.forEach(function(_,i){if(S.done[key+i])n++});$('#'+hintId).textContent=n+' / '+items.length+' flipped'}
+    updHint();
+  }
+  buildDeck('deck1',MOVES,'mv','fliphint',10);
+  buildDeck('deck2',GROUNDS,'gr','fliphint2',10);
+  buildDeck('deck3',REASONS,'rs',null,10);
+
+  /* ---------- level 2: order game ---------- */
+  var nodesEl=$('#nodes'),chipsEl=$('#chips');var lit=-1,seqT=null,next=0;
+  STEPS.forEach(function(st,i){
+    var b=document.createElement('button');b.className='node '+st.c;b.type='button';b.setAttribute('aria-label','Step '+(i+1));
+    b.innerHTML='<b>'+(i+1)+' · ?</b><span>Slot '+(i+1)+'</span>';
+    b.addEventListener('click',function(){if(i<=lit)showStep(i)});
+    nodesEl.appendChild(b);
+  });
+  function buildChips(){
+    chipsEl.innerHTML='';var order=STEPS.map(function(_,i){return i}).sort(function(){return Math.random()-.5});
+    order.forEach(function(i){var st=STEPS[i];var c=document.createElement('button');c.className='chip';c.type='button';c.setAttribute('data-i',i);c.innerHTML='<i>'+st.d+'</i>'+st.t;
+      c.addEventListener('click',function(){
+        if(i===next){c.classList.add('gone');light(i);next++;if(next===STEPS.length){award('order',60,'Sequenced the block');$('#steptext').textContent=STEPS[5].txt+' Sequence complete.'}}
+        else{c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');toast('Not yet — something came before that')}
+      });
+      chipsEl.appendChild(c)});
+  }
+  function showStep(i){var st=STEPS[i];var big=$('#stepbig');big.textContent=st.big;big.style.color='var(--'+st.c+'-t)';$('#stepsub').textContent=st.sub;$('#steptext').textContent=st.txt}
+  function light(i){
+    lit=Math.max(lit,i);
+    $$('.node').forEach(function(n,k){var on=k<=lit;n.classList.toggle('lit',on);if(on)n.innerHTML='<b>'+STEPS[k].d+'</b><span>'+STEPS[k].t+'</span>'});
+    $('#rail').style.width=((lit+1)/STEPS.length*100)+'%';
+    showStep(i);award('st'+i,10,STEPS[i].d+' — '+STEPS[i].t);
+    if(stage2&&stage2.setStep)stage2.setStep(lit);
+  }
+  function playSeq(){
+    clearTimeout(seqT);var i=next;
+    (function step(){if(i>=STEPS.length)return;var chip=$('.chip[data-i="'+i+'"]');if(chip)chip.classList.add('gone');light(i);next=i+1;i++;if(i<STEPS.length)seqT=setTimeout(step,reduce?200:1000);else award('order',60,'Sequenced the block')})();
+  }
+  function resetSeq(){clearTimeout(seqT);lit=-1;next=0;$$('.node').forEach(function(n,k){n.classList.remove('lit');n.innerHTML='<b>'+(k+1)+' · ?</b><span>Slot '+(k+1)+'</span>'});$('#rail').style.width='0%';$('#stepbig').textContent='?';$('#stepbig').style.color='var(--gov-t)';$('#stepsub').textContent='NEXT UP';$('#steptext').textContent='Which came first? Tap a chip above. Wrong guesses just wobble.';buildChips();if(stage2&&stage2.setStep)stage2.setStep(-1)}
+  $('#playseq').addEventListener('click',playSeq);
+  $('#resetseq').addEventListener('click',resetSeq);
+  buildChips();
+  function animateBars(){$$('.track i').forEach(function(b){var w=b.getAttribute('data-w');b.style.width='0%';setTimeout(function(){b.style.width=w+'%'},60)})}
+  $$('.track i').forEach(function(b){b.style.width=b.getAttribute('data-w')+'%'});
+
+  /* ---------- level 3: price ---------- */
+  function px(v){return 40+(v-30)*7.25}
+  function setPrice(v,user){
+    var x=px(v);$('#pline').setAttribute('x1',x);$('#pline').setAttribute('x2',x);
+    $('#ptag').setAttribute('transform','translate('+x+' 0)');$('#ptxt').textContent='You: $'+v;
+    $('#rp').textContent='$'+v;
+    var d=Math.round((v/79-1)*100);var rd=$('#rd');rd.textContent=(d>0?'+':'')+d+'%';
+    rd.style.color=d>0?'var(--qc-t)':(d<0?'var(--av-t)':'var(--ink)');
+    var zone,label;
+    if(v<43){zone='Trough';label='inside the trough range — priced on FY17 alone'}
+    else if(v<71){zone='Below';label='between trough and normal — a discount to any recovery'}
+    else if(v<78){zone='Normal';label='inside normalised earnings — fair, no premium'}
+    else if(v<=87){zone='Fair+';label='sum of the parts to normal high — still no control premium'}
+    else if(v<=106){zone='Recovery';label='inside the recovery + 5G range'}
+    else{zone='Beyond';label='above every method — a full premium and then some'}
+    $('#rz').textContent=zone;$('#rzl').textContent=label;
+    if(user&&v!==79)award('price',30,'Named your price');
+    if(stage3&&stage3.setPrice)stage3.setPrice(v);
+  }
+  $('#price').addEventListener('input',function(e){setPrice(parseInt(e.target.value,10),true)});
+  function vote(kind){
+    var vb=$('#vbanner'),vw=$('#vword'),vt=$('#vtext');$('#verdict').hidden=false;
+    if(kind==='reject'){vb.classList.add('ok');vw.textContent='Reject — same as us';vt.textContent='Our vote: reject. $79 is only ~4% above our $76 expected value, with no control premium and the whole 5G upside surrendered. Flip the four reasons.'}
+    else{vb.classList.remove('ok');vw.textContent='Accept — we disagree';vt.textContent='Fair enough: earnings were falling and the licensing model was under attack. Our vote was still reject — flip the four reasons and see if they move you.'}
+    award('vote',40,'Vote cast');
+  }
+  $('#vAccept').addEventListener('click',function(){vote('accept')});
+  $('#vReject').addEventListener('click',function(){vote('reject')});
+
+  /* ---------- quizzes ---------- */
+  function buildQuiz(n){
+    var q=QUIZ[n],host=$('#quiz'+n);host.innerHTML='';
+    var h=document.createElement('div');h.innerHTML='<p class="hint">Checkpoint '+n+'</p><p class="q">'+q.q+'</p>';host.appendChild(h);
+    var opts=document.createElement('div');opts.className='opts';host.appendChild(opts);
+    var msg=document.createElement('p');msg.className='qmsg';host.appendChild(msg);
+    var tries=0,solved=!!S.quiz[n];
+    q.a.forEach(function(a,i){
+      var b=document.createElement('button');b.className='opt';b.type='button';b.innerHTML='<i>'+String.fromCharCode(65+i)+'</i><span>'+a+'</span>';
+      if(solved&&i===q.ok)b.classList.add('right');
+      b.addEventListener('click',function(){
+        if(solved)return;tries++;
+        if(i===q.ok){solved=true;b.classList.add('right');msg.className='qmsg ok';msg.textContent='Correct. '+q.why;
+          S.quiz[n]=1;save();var pts=tries===1?100:50;award('qz'+n,pts);renderHud();
+          $$('.opt',opts).forEach(function(o){o.disabled=true});
+          levelUp(n,pts);
+        }else{b.classList.add('wrong');b.disabled=true;msg.className='qmsg no';msg.textContent='Not that one — try again.'}
+      });
+      opts.appendChild(b);
+    });
+    if(solved){msg.className='qmsg ok';msg.textContent='Passed. '+q.why;$$('.opt',opts).forEach(function(o){o.disabled=true})}
+  }
+  buildQuiz(1);buildQuiz(2);buildQuiz(3);
+
+  /* ---------- finale ---------- */
+  var COLORS=[C.av,C.qc,C.gov];
+  var team=$('#team');
+  TEAM.forEach(function(m,i){
+    var d=document.createElement('div');d.className='member tilt';
+    var ini=m[0].split(' ').map(function(w){return w[0]}).join('').slice(0,2);
+    d.innerHTML='<span class="av" style="background:'+COLORS[i%3]+'">'+ini+'</span><div><b>'+m[0]+'</b><span>'+m[1]+'</span></div>';
+    team.appendChild(d);
+  });
+  function renderFinale(){
+    var qn=[1,2,3].filter(function(n){return S.quiz[n]}).length;
+    $('#fxp').textContent=S.xp;$('#fpct').textContent=pct()+'%';$('#fq').textContent=qn+'/3';
+    var fb=$('#fbadges');fb.innerHTML='';
+    BADGES.forEach(function(b,i){var on=i<3?!!S.quiz[i+1]:qn===3;var s=document.createElement('span');s.className='bd'+(on?' on':'');s.innerHTML='<i>★</i>'+b[0]+' <span style="color:var(--dim)">· '+b[1]+'</span>';fb.appendChild(s)});
+  }
+  $('#replay').addEventListener('click',function(){S={xp:0,done:{},quiz:{}};save();renderHud();buildQuiz(1);buildQuiz(2);buildQuiz(3);$$('.flip').forEach(function(f){f.classList.remove('on');f.setAttribute('aria-pressed','false')});$('#fliphint').textContent='0 / 5 flipped';$('#fliphint2').textContent='0 / 4 flipped';$('#verdict').hidden=true;$('#scrubber').value=0;scrub(0);$('#price').value=79;setPrice(79);resetSeq();go(1);toast('New run')});
+
+  /* ---------- tilt ---------- */
+  if(!reduce){document.addEventListener('mousemove',function(e){var el=e.target.closest&&e.target.closest('.tilt');$$('.tilt').forEach(function(t){if(t!==el)t.style.transform=''});if(!el)return;var r=el.getBoundingClientRect();var rx=((e.clientY-r.top)/r.height-.5)*-10;var ry=((e.clientX-r.left)/r.width-.5)*12;el.style.transform='rotateX('+rx+'deg) rotateY('+ry+'deg) translateZ(6px)'})}
+
+  /* ---------- starfield ---------- */
+  (function(){
+    var cv=$('#stars'),g=cv.getContext&&cv.getContext('2d');if(!g)return;
+    var W,H,ps=[],mx=0,my=0;
+    function size(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight}
+    size();window.addEventListener('resize',size);
+    for(var i=0;i<110;i++)ps.push({x:Math.random(),y:Math.random(),z:.3+Math.random()*.7,c:i%9===0?C.qct:(i%13===0?C.avt:'#A9B4CF')});
+    document.addEventListener('mousemove',function(e){mx=(e.clientX/W-.5);my=(e.clientY/H-.5)});
+    function draw(now){g.clearRect(0,0,W,H);var t=now/1000;ps.forEach(function(p){var x=(p.x+(reduce?0:t*0.004*p.z))%1;var y=p.y;var dx=mx*30*p.z,dy=my*30*p.z;g.globalAlpha=.25+p.z*.5;g.fillStyle=p.c;g.beginPath();g.arc(x*W+dx,y*H+dy-window.scrollY*0.08*p.z%H,p.z*1.6,0,6.28);g.fill()});g.globalAlpha=1;if(!reduce)requestAnimationFrame(draw)}
+    requestAnimationFrame(draw);
+  })();
+
+  /* ---------- 3D stages ---------- */
+  var stages=[],stage1=null,stage2=null,stage3=null,stage4=null;
+  function makeStage(id,cfg){
+    var holder=document.getElementById(id);if(!holder||!window.THREE)return null;
+    var renderer;try{renderer=new THREE.WebGLRenderer({antialias:true,alpha:true})}catch(e){return null}
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    holder.insertBefore(renderer.domElement,holder.firstChild);
+    var fb=holder.querySelector('.fallback');if(fb)fb.hidden=true;
+    var scene=new THREE.Scene();
+    var camera=new THREE.PerspectiveCamera(cfg.fov||36,4/3,0.1,100);
+    scene.add(new THREE.AmbientLight(0xaab4cf,0.6));
+    var key=new THREE.DirectionalLight(0xffffff,0.9);key.position.set(4,6,5);scene.add(key);
+    var l1=new THREE.PointLight(0x5fd6e4,1.1,18);l1.position.set(-3,2.5,3);scene.add(l1);
+    var l2=new THREE.PointLight(0xff8fa4,0.7,18);l2.position.set(4,1.5,-3);scene.add(l2);
+    var grid=new THREE.GridHelper(16,32,0x3a4c7a,0x1d2a4d);grid.position.y=cfg.floor!=null?cfg.floor:-0.95;scene.add(grid);
+    var st={holder:holder,renderer:renderer,scene:scene,camera:camera,rotY:cfg.rot||0,tRotY:cfg.rot||0,rotX:0,tRotX:0,drag:false,moved:0,pick:[],onPick:null,onHover:null,update:null,auto:cfg.auto!==false,look:cfg.look||[0,0,0],radius:cfg.radius||8.5,camY:cfg.camY||3};
+    var ray=new THREE.Raycaster(),ndc=new THREE.Vector2(),el=renderer.domElement,px0=0,py0=0;
+    function cast(e){var r=el.getBoundingClientRect();ndc.x=((e.clientX-r.left)/r.width)*2-1;ndc.y=-((e.clientY-r.top)/r.height)*2+1;ray.setFromCamera(ndc,camera);var hits=ray.intersectObjects(st.pick,false);return hits.length?hits[0].object:null}
+    el.addEventListener('pointerdown',function(e){st.drag=true;st.moved=0;px0=e.clientX;py0=e.clientY;try{el.setPointerCapture(e.pointerId)}catch(err){}});
+    el.addEventListener('pointermove',function(e){
+      if(st.drag){var dx=e.clientX-px0,dy=e.clientY-py0;st.moved+=Math.abs(dx)+Math.abs(dy);st.tRotY+=dx*0.008;st.tRotX=Math.max(-0.4,Math.min(0.6,st.tRotX+dy*0.005));px0=e.clientX;py0=e.clientY}
+      else if(st.pick.length){var o=cast(e);el.style.cursor=o?'pointer':'grab';if(st.onHover)st.onHover(o)}
+    });
+    el.addEventListener('pointerup',function(e){var wasDrag=st.moved>6;st.drag=false;if(!wasDrag&&st.pick.length&&st.onPick){var o=cast(e);if(o)st.onPick(o)}});
+    el.addEventListener('pointercancel',function(){st.drag=false});
+    el.style.cursor='grab';
+    function size(){var w=holder.clientWidth||600,h=holder.clientHeight||450;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+    size();if(window.ResizeObserver)new ResizeObserver(size).observe(holder);else window.addEventListener('resize',size);
+    stages.push(st);return st;
+  }
+  function label(text,color,w){
+    var c=document.createElement('canvas');c.width=256;c.height=64;var g=c.getContext('2d');
+    g.font='700 30px "Chakra Petch","Trebuchet MS",Arial,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillStyle=color||C.ink;g.fillText(text,128,34);
+    var tex=new THREE.CanvasTexture(c);tex.minFilter=THREE.LinearFilter;
+    var s=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));var sc=w||1.6;s.scale.set(sc,sc/4,1);return s;
+  }
+  function mat(hex,o){return new THREE.MeshStandardMaterial(Object.assign({color:hex,metalness:0.35,roughness:0.45},o||{}))}
+  function lerp(a,b,k){return a+(b-a)*k}
+
+  function buildStages(){
+    /* --- stage 1: chip + towers --- */
+    stage1=makeStage('scene1',{radius:8.2,camY:3.1,look:[0.4,0.1,0],rot:-0.35});
+    if(stage1){
+      var sc=stage1.scene,chip=new THREE.Group();
+      chip.add(new THREE.Mesh(new THREE.BoxGeometry(2.4,0.3,2.4),mat(0x1d2a4d,{metalness:0.55,roughness:0.35})));
+      var die=new THREE.Mesh(new THREE.BoxGeometry(1.3,0.12,1.3),mat(0x0099ad,{emissive:0x0099ad,emissiveIntensity:0.55}));die.position.y=0.2;chip.add(die);
+      var core=new THREE.Mesh(new THREE.BoxGeometry(0.62,0.06,0.62),mat(0x5fd6e4,{emissive:0x5fd6e4,emissiveIntensity:0.9}));core.position.y=0.29;chip.add(core);
+      var pin=mat(0xa9b4cf,{metalness:0.9,roughness:0.3});
+      for(var i=0;i<9;i++){var t=-1.0+i*0.25;[[t,1.33,0.14,0.28],[t,-1.33,0.14,0.28],[1.33,t,0.28,0.14],[-1.33,t,0.28,0.14]].forEach(function(p){var m=new THREE.Mesh(new THREE.BoxGeometry(p[2],0.08,p[3]),pin);m.position.set(p[0],-0.06,p[1]);chip.add(m)})}
+      chip.position.set(-1.3,-0.1,0.3);sc.add(chip);
+      var TW=[{p:70,ev:0},{p:82,ev:2},{p:79,ev:3}],towers=[];
+      TW.forEach(function(t,i){var h=(t.p-60)*0.11;var m=new THREE.Mesh(new THREE.BoxGeometry(0.6,h,0.6),mat(0xd64963,{emissive:0xd64963,emissiveIntensity:0.15}));m.position.set(1.4+i*0.95,-0.95+h/2,-0.3);m.userData={ev:t.ev,i:i,h:h};sc.add(m);towers.push(m);
+        var lb=label('$'+t.p,C.avt,1.3);lb.position.set(m.position.x,-0.95+h+0.35,-0.3);sc.add(lb)});
+      var wall=new THREE.Mesh(new THREE.BoxGeometry(0.1,3,2.2),mat(0xb98924,{emissive:0xb98924,emissiveIntensity:0.35,transparent:true,opacity:0.7}));wall.position.set(4.2,0.55,-0.3);sc.add(wall);
+      var wl=label('BLOCKED',C.govt,1.5);wl.position.set(4.2,2.35,-0.3);sc.add(wl);
+      var cl=label('QUALCOMM',C.qct,1.9);cl.position.set(-1.3,1.05,0.3);sc.add(cl);
+      stage1.pick=towers;var hot=null,curP=70;
+      stage1.onHover=function(o){if(hot&&hot!==o){hot.material.emissiveIntensity=0.15}hot=o;if(o)o.material.emissiveIntensity=0.6};
+      stage1.onPick=function(o){jumpTo(o.userData.ev);award('tower'+o.userData.i,15,'Tower tapped');};
+      stage1.setPrice=function(p){curP=p};
+      stage1.update=function(t){chip.rotation.y=t*0.25;chip.position.y=-0.1+(reduce?0:Math.sin(t*1.3)*0.06);
+        towers.forEach(function(m){var on=TW[m.userData.i].p===curP;var target=on?0.7:(hot===m?0.6:0.15);m.material.emissiveIntensity=lerp(m.material.emissiveIntensity,target,0.15);m.scale.y=lerp(m.scale.y,on?1.06:1,0.15)})};
+    }
+    /* --- stage 2: the gate --- */
+    stage2=makeStage('scene2',{radius:9.2,camY:3.4,look:[0,0.2,0],rot:0.5,auto:false});
+    if(stage2){
+      var s2=stage2.scene;
+      var road=new THREE.Mesh(new THREE.BoxGeometry(10,0.12,2.2),mat(0x16213f,{metalness:0.2,roughness:0.8}));road.position.y=-0.9;s2.add(road);
+      var pillars=[],cols={gov:0xb98924,av:0xd64963,qc:0x0099ad};
+      STEPS.forEach(function(st,i){var m=new THREE.Mesh(new THREE.CylinderGeometry(0.24,0.28,1.1,24),mat(cols[st.c],{emissive:cols[st.c],emissiveIntensity:0.04,transparent:true,opacity:0.55}));m.position.set(-3.75+i*1.5,-0.3,-1.6);m.userData.target=0;s2.add(m);pillars.push(m);
+        var lb=label(st.d,C.ink,1.25);lb.position.set(m.position.x,0.6,-1.6);s2.add(lb)});
+      var gate=new THREE.Mesh(new THREE.BoxGeometry(0.16,2.6,2.6),mat(0xb98924,{emissive:0xb98924,emissiveIntensity:0.35,transparent:true,opacity:0.8}));gate.position.set(0.3,4.5,0);s2.add(gate);var gateY=4.5;
+      var post=new THREE.Mesh(new THREE.BoxGeometry(0.3,3.4,0.3),mat(0x3a4c7a));post.position.set(0.3,0.75,1.5);s2.add(post);
+      var post2=post.clone();post2.position.z=-1.5;s2.add(post2);
+      var cube=new THREE.Mesh(new THREE.BoxGeometry(0.9,0.9,0.9),mat(0xd64963,{emissive:0xd64963,emissiveIntensity:0.25}));cube.position.set(-3.6,-0.4,0);s2.add(cube);var cubeX=-3.6;
+      var cl2=label('BROADCOM',C.avt,1.7);cl2.position.set(0,0,0);s2.add(cl2);
+      var jac=new THREE.Mesh(new THREE.SphereGeometry(0.34,24,24),mat(0x0099ad,{emissive:0x0099ad,emissiveIntensity:0.3}));jac.position.set(2.6,-0.5,0.6);s2.add(jac);var jacX=2.6,jacY=-0.5;
+      var jl=label('JACOBS',C.qct,1.3);s2.add(jl);
+      var step=-1;
+      stage2.setStep=function(i){step=i;pillars.forEach(function(p,k){p.userData.target=k<=i?1:0});gateY=i>=2?0.4:4.5;cubeX=i>=3?-6.5:(i>=0?-2.2+i*0.35:-3.6);jacX=i>=5?5.2:(i>=4?3.4:2.6);jacY=i>=5?1.2:-0.5};
+      stage2.update=function(t){
+        pillars.forEach(function(p,k){var tg=p.userData.target;p.material.emissiveIntensity=lerp(p.material.emissiveIntensity,tg?0.6:0.04,0.1);p.material.opacity=lerp(p.material.opacity,tg?1:0.55,0.1);p.scale.y=lerp(p.scale.y,tg?1.35:1,0.1);p.position.y=-0.85+1.1*p.scale.y/2});
+        gate.position.y=lerp(gate.position.y,gateY,0.08);
+        cube.position.x=lerp(cube.position.x,cubeX,0.06);cube.rotation.y=t*0.6;cube.rotation.x=t*0.3;cl2.position.set(cube.position.x,0.55,0);
+        jac.position.x=lerp(jac.position.x,jacX,0.06);jac.position.y=lerp(jac.position.y,jacY,0.06)+(reduce?0:Math.sin(t*2)*0.04);jl.position.set(jac.position.x,jac.position.y+0.6,0.6);
+      };
+    }
+    /* --- stage 3: 3D football field --- */
+    stage3=makeStage('scene3',{radius:9.8,camY:4.4,look:[0,-0.3,0],rot:0.35});
+    if(stage3){
+      var s3=stage3.scene;function X(v){return -4+(v-30)/80*8}
+      var ROWS=[{a:35,b:42,z:1.5,l:'Trough'},{a:71,b:87,z:0.5,l:'Normal'},{a:78,b:84,z:-0.5,l:'Parts'},{a:87,b:106,z:-1.5,l:'5G'}];
+      ROWS.forEach(function(r){var len=X(r.b)-X(r.a);var m=new THREE.Mesh(new THREE.BoxGeometry(len,0.34,0.6),mat(0x0099ad,{emissive:0x0099ad,emissiveIntensity:0.25}));m.position.set(X(r.a)+len/2,-0.78,r.z);s3.add(m);
+        var lb=label('$'+r.a+'–'+r.b,C.ink,1.5);lb.position.set(X(r.b)+0.95,-0.7,r.z);s3.add(lb);
+        var ll=label(r.l,'#A9B4CF',1.2);ll.position.set(-4.75,-0.7,r.z);s3.add(ll)});
+      [30,50,70,90,110].forEach(function(v){var tk=label('$'+v,'#A9B4CF',1.1);tk.position.set(X(v),-0.85,2.5);s3.add(tk)});
+      var offer=new THREE.Mesh(new THREE.BoxGeometry(0.07,2,4.6),mat(0xd64963,{emissive:0xd64963,emissiveIntensity:0.3,transparent:true,opacity:0.55}));offer.position.set(X(79),0.05,0);s3.add(offer);
+      var ol=label('OFFER $79',C.avt,1.6);ol.position.set(X(79),1.3,0);s3.add(ol);
+      var mine=new THREE.Mesh(new THREE.BoxGeometry(0.07,2,4.6),mat(0xb98924,{emissive:0xb98924,emissiveIntensity:0.45,transparent:true,opacity:0.7}));mine.position.set(X(79),0.05,0);s3.add(mine);var mineX=X(79);
+      var ml=label('YOU $79',C.govt,1.6);ml.position.set(X(79),1.6,0);s3.add(ml);
+      var ev=new THREE.Mesh(new THREE.OctahedronGeometry(0.3),mat(0xeef2fb,{emissive:0xeef2fb,emissiveIntensity:0.25}));ev.position.set(X(76),0.4,2.2);s3.add(ev);
+      var el3=label('EV $76',C.ink,1.3);el3.position.set(X(76),0.95,2.2);s3.add(el3);
+      stage3.setPrice=function(v){mineX=X(v);ml.material.map.dispose();var nl=label('YOU $'+v,C.govt,1.6);ml.material.map=nl.material.map;ml.material.needsUpdate=true};
+      stage3.update=function(t){mine.position.x=lerp(mine.position.x,mineX,0.12);ml.position.x=mine.position.x;ev.rotation.y=t*0.8;ev.position.y=0.4+(reduce?0:Math.sin(t*2)*0.06)};
+    }
+    /* --- stage 4: medal + confetti --- */
+    stage4=makeStage('scene4',{radius:7.5,camY:1.2,look:[0,0.6,0],rot:0.2,floor:-1.6});
+    if(stage4){
+      var s4=stage4.scene,medal=new THREE.Group();
+      medal.add(new THREE.Mesh(new THREE.TorusGeometry(1.15,0.2,24,72),mat(0xb98924,{metalness:0.8,roughness:0.3})));
+      var face=new THREE.Mesh(new THREE.CylinderGeometry(1.05,1.05,0.14,72),mat(0xf2c85e,{metalness:0.6,roughness:0.35}));face.rotation.x=Math.PI/2;medal.add(face);
+      var ten=label('10',C.bg||'#0F1730',1.5);ten.position.z=0.12;medal.add(ten);
+      var rb1=new THREE.Mesh(new THREE.BoxGeometry(0.42,1.6,0.08),mat(0xd64963));rb1.position.set(-0.28,2.05,0);medal.add(rb1);
+      var rb2=new THREE.Mesh(new THREE.BoxGeometry(0.42,1.6,0.08),mat(0x0099ad));rb2.position.set(0.28,2.05,0);medal.add(rb2);
+      medal.position.y=0.2;s4.add(medal);
+      var N=260,geo=new THREE.BufferGeometry(),pos=new Float32Array(N*3),col=new Float32Array(N*3),vel=[];
+      var pal=[[0.84,0.29,0.39],[0,0.6,0.68],[0.73,0.54,0.14],[0.93,0.95,0.98],[0.37,0.84,0.89]];
+      for(var k=0;k<N;k++){var c=pal[k%pal.length];col[k*3]=c[0];col[k*3+1]=c[1];col[k*3+2]=c[2];pos[k*3+1]=-5;vel.push({x:0,y:0,z:0})}
+      geo.setAttribute('position',new THREE.BufferAttribute(pos,3));geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+      var pts=new THREE.Points(geo,new THREE.PointsMaterial({size:0.12,vertexColors:true,transparent:true,opacity:0.95}));s4.add(pts);
+      var live=false;
+      stage4.burst=function(){if(reduce)return;for(var k=0;k<N;k++){pos[k*3]=(Math.random()-.5)*0.6;pos[k*3+1]=0.4;pos[k*3+2]=(Math.random()-.5)*0.6;vel[k]={x:(Math.random()-.5)*0.16,y:0.12+Math.random()*0.14,z:(Math.random()-.5)*0.16}}live=true};
+      stage4.update=function(t){medal.rotation.y=Math.sin(t*0.7)*0.5;medal.position.y=0.2+(reduce?0:Math.sin(t*1.4)*0.08);
+        if(live){var any=false;for(var k=0;k<N;k++){if(pos[k*3+1]<-1.7)continue;any=true;vel[k].y-=0.004;pos[k*3]+=vel[k].x;pos[k*3+1]+=vel[k].y;pos[k*3+2]+=vel[k].z;vel[k].x*=0.985;vel[k].z*=0.985}geo.attributes.position.needsUpdate=true;if(!any)live=false}};
+    }
+    if(stages.length)requestAnimationFrame(loop);
+    if(cur===4&&stage4)stage4.burst();
+  }
+  function loop(now){
+    requestAnimationFrame(loop);var t=now/1000;
+    stages.forEach(function(st){
+      var lv=st.holder.closest('.level');if(lv&&lv.hidden)return;
+      if(!st.drag&&st.auto&&!reduce)st.tRotY+=0.0025;
+      st.rotY+=(st.tRotY-st.rotY)*0.08;st.rotX+=(st.tRotX-st.rotX)*0.08;
+      st.camera.position.set(Math.sin(st.rotY)*st.radius,st.camY+st.rotX*3.5,Math.cos(st.rotY)*st.radius);
+      st.camera.lookAt(st.look[0],st.look[1],st.look[2]);
+      if(st.update)st.update(t);
+      st.renderer.render(st.scene,st.camera);
+    });
+  }
+
+  /* ---------- boot ---------- */
+  function padMain(){var h=$('.hud').offsetHeight;$('main').style.paddingTop=(h+18)+'px'}
+  padMain();window.addEventListener('resize',padMain);
+  renderHud();scrub(0);setPrice(79);
+  var h=(location.hash||'').match(/level(\d)/);
+  go(h?parseInt(h[1],10):1);
+  var booted=false;function boot(){if(booted)return;booted=true;padMain();try{buildStages()}catch(e){}}
+  if(document.fonts&&document.fonts.ready){document.fonts.ready.then(boot);setTimeout(boot,1500)}else{boot()}
+})();
+</script>
+</body>
+</html>
